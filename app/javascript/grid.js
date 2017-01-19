@@ -51,32 +51,47 @@ export class BlockGrid {
     }
 
     blockClicked (e, block, id) {
-        // document.getElementById(id).setAttribute('id', 'charlie');
-        // is it possible to set element id based on its coordinates
-        // for each column go through and update their coordinates
+        let adjacentCellsChecked = [];
+        var blockColour = document.getElementById(id).style.background;
 
-        // 1. Get the colors of the surrounding blocks.
-        let ids = [];
+        function getIdsOfAdjacentCellsWithTheSameColour(elemId) { // ensure that current is inserted
+            // Make sure we haven't already run this check for an element.
+            if (adjacentCellsChecked.indexOf(elemId) >= 0) return null;
+            adjacentCellsChecked.push(elemId);
 
-        function getIdsOfAdjacentCellsWithTheSameColour(elemId) {
-            var idOfBlockAbove = 'block_' + (block.x) + 'x' + (block.y + -1 );
-            var idOfBlockBelow = 'block_' + (block.x) + 'x' + (block.y + 1 );
-            var idOfBlockLeft = 'block_' + (block.x - 1) + 'x' + (block.y);
-            var idOfBlockRight = 'block_' + (block.x + 1) + 'x' + (block.y);
+            var coordinates = elemId.substring(elemId.length - 3);
+            var xAxis = parseInt(coordinates.slice(0, 1));
+            var yAxis = parseInt(coordinates.slice(2, 3));
 
-            var blockColour = document.getElementById(elemId).style.background;
+            var idOfBlockAbove = 'block_' + xAxis + 'x' + (yAxis - 1 );
+            var idOfBlockBelow = 'block_' + xAxis + 'x' + (yAxis + 1 );
+            var idOfBlockLeft = 'block_' + (xAxis - 1) + 'x' + yAxis;
+            var idOfBlockRight = 'block_' + (xAxis + 1) + 'x' + yAxis;
+
             var adjacentBlocks = [idOfBlockAbove, idOfBlockBelow, idOfBlockRight, idOfBlockLeft];
-
             return adjacentBlocks.reduce(function(accumulator, id) {
-                var adjacentBlockColour = document.getElementById(id).style.background;
-                if (adjacentBlockColour === blockColour) {
-                    return [].concat(accumulator, id)
+                const adjacentElement = document.getElementById(id);
+
+                if (!adjacentElement) return accumulator;
+
+                if (adjacentElement.style.background === blockColour) {
+                    return [].concat(accumulator, getIdsOfAdjacentCellsWithTheSameColour(id));
                 }
+
                 return accumulator;
-            }, []);
+            }, elemId);
         }
 
-        console.log('IDs ----', getIdsOfAdjacentCellsWithTheSameColour(id)); // KEEP GOING TILL THERE ARE NONE
+        const idsToBeDeleted = [].concat(getIdsOfAdjacentCellsWithTheSameColour(id));
+        idsToBeDeleted.forEach(function(id) {
+            if (id) {
+                var elem = document.getElementById(id);
+                elem.remove();
+            }
+        });
+
+        //TODO: next step is to alter the IDs of the cells that have moved. Perhaps go through each column? Or find the nearest and don't rely on coords?
+
         console.log(e, block, id);
     }
 }
