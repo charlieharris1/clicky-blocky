@@ -61,15 +61,12 @@ export class BlockGrid {
       if (blockHasBeenChecked) return null;
       blocksChecked.push(blockId);
 
-      const block = document.getElementById(blockId).getBoundingClientRect();
+      const { left, bottom, top, right } = document.getElementById(blockId).getBoundingClientRect();
 
-      const middleVertical = block.top + (block.height / 2);
-      const middleHorizontal = block.left + (block.width / 2);
-
-      const blockBelow = document.elementFromPoint(middleHorizontal, block.bottom + 1);
-      const blockAbove = document.elementFromPoint(middleHorizontal, block.top - 1);
-      const blockLeft = document.elementFromPoint(block.left - 1, middleVertical);
-      const blockRight = document.elementFromPoint(block.right + 1, middleVertical);
+      const blockBelow = document.elementFromPoint(Math.ceil(left), bottom + 1);
+      const blockAbove = document.elementFromPoint(Math.ceil(left), top - 1);
+      const blockLeft = document.elementFromPoint(left - 1, Math.ceil(top));
+      const blockRight = document.elementFromPoint(right + 1, Math.ceil(top));
 
       const adjacentBlocks = [blockBelow, blockAbove, blockLeft, blockRight];
 
