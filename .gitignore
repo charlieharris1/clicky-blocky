@@ -4,3 +4,4 @@ dist/
 test-build/
 .idea/
 .bin/
+npm-debug.log*
