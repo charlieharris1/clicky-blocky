@@ -1,7 +1,7 @@
 /* eslint-env browser */
 export const COLOURS = ['red', 'green', 'blue', 'yellow'];
-const MAX_X = 10;
-const MAX_Y = 10;
+const X = 10;
+const Y = 10;
 
 export class Block {
   constructor(x, y) {
@@ -12,7 +12,7 @@ export class Block {
 }
 
 export class BlockGrid {
-  constructor() {
+  constructor(MAX_X, MAX_Y) {
     this.grid = [];
 
     for (let x = 0; x < MAX_X; x += 1) {
@@ -24,18 +24,21 @@ export class BlockGrid {
       this.grid.push(col);
     }
 
+    this.MAX_X = MAX_X;
+    this.MAX_Y = MAX_Y;
+
     return this;
   }
 
   render(el = document.querySelector('#gridEl')) {
-    for (let x = 0; x < MAX_X; x += 1) {
+    for (let x = 0; x < this.MAX_X; x += 1) {
       const colId = `col_${x}`;
       const colEl = document.createElement('div');
       colEl.className = 'col';
       colEl.id = colId;
       el.appendChild(colEl);
 
-      for (let y = MAX_Y - 1; y >= 0; y -= 1) {
+      for (let y = this.MAX_Y - 1; y >= 0; y -= 1) {
         const block = this.grid[x][y];
         const blockId = `block_${x}x${y}`;
         const blockEl = document.createElement('div');
@@ -58,7 +61,7 @@ export class BlockGrid {
     function connectedBlocksWithSameColour(blockId) {
       const blockHasBeenChecked = blocksChecked.indexOf(blockId) >= 0;
 
-      if (blockHasBeenChecked) return null;
+      if (blockHasBeenChecked || !blockId) return null;
       blocksChecked.push(blockId);
 
       const { left, bottom, top, right } = document.getElementById(blockId).getBoundingClientRect();
@@ -81,9 +84,9 @@ export class BlockGrid {
       }, [blockId]);
     }
 
-    connectedBlocksWithSameColour(targetBlockId)
+    return connectedBlocksWithSameColour(targetBlockId)
           .forEach(id => (id ? document.getElementById(id).remove() : null));
   }
 }
 
-window.addEventListener('DOMContentLoaded', () => new BlockGrid().render());
+window.addEventListener('DOMContentLoaded', () => new BlockGrid(X, Y).render());
