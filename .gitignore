@@ -5,3 +5,4 @@ test-build/
 .idea/
 .bin/
 npm-debug.log*
+/*.env

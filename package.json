@@ -4,9 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "gulp",
-    "test": "gulp buildtests && open test/index.html",
+    "start": "node_modules/.bin/gulp",
+    "test": "node_modules/.bin/gulp buildtests && open test/index.html",
     "lint": "eslint app/javascript/*.js"
+  },
+  "engines": {
+    "node": "6.9.1"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.1.18",
