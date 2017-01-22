@@ -71,9 +71,9 @@ export class BlockGrid {
       const blockLeft = document.elementFromPoint(left - 1, Math.ceil(top));
       const blockRight = document.elementFromPoint(right + 1, Math.ceil(top));
 
-      const adjacentBlocks = [blockBelow, blockAbove, blockLeft, blockRight];
+      const connectedBlocks = [blockBelow, blockAbove, blockLeft, blockRight];
 
-      return adjacentBlocks.reduce((accumulator, adjacentBlock) => {
+      return connectedBlocks.reduce((accumulator, adjacentBlock) => {
         if (!adjacentBlock) return accumulator;
 
         if (adjacentBlock.style.background === targetBlockColour) {

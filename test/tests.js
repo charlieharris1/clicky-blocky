@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import _ from 'lodash';
 import { Block, BlockGrid, COLOURS } from '../app/javascript/grid';
 
-const { describe, it, beforeEach } = window;
+const { describe, it, beforeEach, after } = window;
 const setBlueBackground = blocks => [].forEach.call(blocks, (block => block.setAttribute('style', 'background: blue')));
 const setRedBackground = blocks => [].forEach.call(blocks, (block => block.setAttribute('style', 'background: red')));
 
@@ -13,6 +13,8 @@ beforeEach(() => {
     element.removeChild(element.firstChild);
   }
 });
+
+after(() => document.getElementById('test').remove());
 
 describe('Block', () => {
   it('should be created correctly', () => {
@@ -71,7 +73,7 @@ describe('BlockGrid render', () => {
     assert.notInclude(blockElementColourIsAllowed, false, 'all block elements should have valid colours');
 
     const blockElementIds = [].map.call(blockElements, block => block.id);
-    assert.equal(_.uniq(blockElementIds).length, blockElements.length, 'all block element ids are unique');
+    assert.equal(_.uniq(blockElementIds).length, blockElements.length, 'all block element ids should be unique');
   });
 });
 
