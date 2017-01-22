@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node app",
-    "postinstall": "gulp default",
+    "start": "gulp",
     "test": "gulp buildtests && open test/index.html",
     "lint": "eslint app/javascript/*.js"
   },
