@@ -61,7 +61,7 @@ export class BlockGrid {
     function connectedBlocksWithSameColour(blockId) {
       const blockHasBeenChecked = blocksChecked.indexOf(blockId) >= 0;
 
-      if (blockHasBeenChecked || !blockId) return null;
+      if (blockHasBeenChecked) return null;
       blocksChecked.push(blockId);
 
       const { left, bottom, top, right } = document.getElementById(blockId).getBoundingClientRect();
