@@ -97,7 +97,7 @@ describe('BlockGrid blockClicked', () => {
 
     blockGrid.blockClicked(targetBlock.id);
 
-    assert.isNotOk(document.getElementById(targetBlock.id), 'target element should be removed once clicked');
+    assert.isNotOk(document.getElementById(targetBlock.id), 'target block should be removed once clicked');
     assert.equal(document.getElementsByClassName('block').length, 3, 'the three blue blocks should be present');
   });
 
@@ -118,7 +118,7 @@ describe('BlockGrid blockClicked', () => {
 
     blockGrid.blockClicked(targetBlock.id);
 
-    assert.isNotOk(document.getElementById(targetBlock.id), 'target element should be removed once clicked');
+    assert.isNotOk(document.getElementById(targetBlock.id), 'target block should be removed once clicked');
     assert.ok(document.getElementById(unconnectedBlock.id), 'unconnected block with same colour as target should be present');
     assert.equal(document.getElementsByClassName('block').length, 3, 'three blocks should be present');
   });
@@ -150,11 +150,35 @@ describe('BlockGrid blockClicked', () => {
     setRedBackground([targetBlock, connectedBlockAbove, connectedBlockBelow, connectedBlockLeft, connectedBlockRight]);
 
     blockGrid.blockClicked(targetBlock.id);
-    assert.isNotOk(document.getElementById(targetBlock.id), 'target element should be removed once clicked');
+    assert.isNotOk(document.getElementById(targetBlock.id), 'target block should be removed once clicked');
     assert.isNotOk(document.getElementById(connectedBlockAbove.id), 'connected block above with same colour should be removed');
     assert.isNotOk(document.getElementById(connectedBlockBelow.id), 'connected block below with same colour should be removed');
     assert.isNotOk(document.getElementById(connectedBlockLeft.id), 'connected block left with same colour should be removed');
     assert.isNotOk(document.getElementById(connectedBlockRight.id), 'connected block right with same colour should be removed');
     assert.equal(document.getElementsByClassName('block').length, 4, 'the four blue blocks should still exist');
+  });
+
+  it('should remove a block of the same colour as the target when it is connected to it a through a block of the same colour', () => {
+    const X = 2;
+    const Y = 2;
+
+    const blockGrid = new BlockGrid(X, Y);
+    blockGrid.render(document.querySelector('#test'));
+
+    const blocks = document.getElementsByClassName('block');
+    const targetBlock = document.getElementById('block_1x1');
+    const blockNotDirectlyConnected = document.getElementById('block_0x0');
+    const connectedAdjacentBlock = document.getElementById('block_0x1');
+    const remainingBlocks = [].filter.call(blocks, (block => (block.id !== targetBlock.id) && (block.id !== blockNotDirectlyConnected.id)));
+
+    setBlueBackground(remainingBlocks);
+    setRedBackground([targetBlock, blockNotDirectlyConnected, connectedAdjacentBlock]);
+
+    blockGrid.blockClicked(targetBlock.id);
+
+    assert.isNotOk(document.getElementById(targetBlock.id), 'target block should be removed once clicked');
+    assert.isNotOk(document.getElementById(connectedAdjacentBlock.id), 'adjacent connected block with same colour as target should be removed');
+    assert.isNotOk(document.getElementById(blockNotDirectlyConnected.id), 'block connected via block adjacent to the target, with same colour, should be removed');
+    assert.equal(document.getElementsByClassName('block').length, 1, 'one block should be present');
   });
 });
